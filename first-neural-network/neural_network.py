@@ -50,13 +50,13 @@ class NeuralNetwork(object):
 
             error = y - final_outputs
 
-            output_error_term = error[0]
+            output_error_term = error * 1.0
 
-            hidden_error = np.dot(output_error_term, self.weights_hidden_to_output)
+            hidden_error = np.dot(self.weights_hidden_to_output, output_error_term)
 
-            hidden_error_term = hidden_error.T * hidden_outputs * (1 - hidden_outputs)
+            hidden_error_term = hidden_error * hidden_outputs * (1 - hidden_outputs)
 
-            delta_weights_h_o += output_error_term * hidden_outputs.reshape(delta_weights_h_o.shape)
+            delta_weights_h_o += output_error_term * hidden_outputs[:, None]
             delta_weights_i_h += hidden_error_term * X[:, None]
 
         self.weights_hidden_to_output += self.lr * delta_weights_h_o / n_records
